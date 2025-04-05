@@ -1,0 +1,10 @@
+{
+  "title": "Sample Search",
+  "data": {
+    "section1": ["Item 1", "Item 2", "Item 3"],
+    "section2": {
+      "key1": "value1",
+      "key2": "value2"
+    }
+  }
+}

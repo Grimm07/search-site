@@ -1,20 +1,25 @@
-// components/SearchBar.tsx
 import React, { useCallback, useState } from 'react';
 import {
     TextField,
     Button,
     InputAdornment,
-    Tooltip, Typography, Box,
+    Tooltip,
+    Typography,
+    Box,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import {useInteractionStore} from "@/store/useInteractionStore";
+import { useInteractionStore } from '@/store/useInteractionStore';
 
-const SearchBar = () => {
+interface SearchBarProps {
+    searchValue?: string; // Allow an external search value to be passed in
+}
+
+const SearchBar: React.FC<SearchBarProps> = ({ searchValue }) => {
     const { query, setQuery, devMode, uploadedFile, list } = useInteractionStore();
     const [touched, setTouched] = useState(false);
 
     const handleSearch = useCallback(() => {
-        if (!query && devMode === 'live') return; // optional validation
+        if (!query && devMode === 'live') return; // Validation for live mode
 
         switch (devMode) {
             case 'live':
@@ -44,39 +49,42 @@ const SearchBar = () => {
             <Box>
                 <Typography
                     variant="body2"
-                    color={touched && devMode === 'live' && query.trim() === '' ? 'error' : 'text.secondary'}
+                    color={touched && devMode === 'live' && (searchValue || query)?.trim() === '' ? 'error' : 'text.secondary'}
                 >
-                    {touched && devMode === 'live' && query.trim() === ''
+                    {/* Validation or helper text */}
+                    {touched && devMode === 'live' && (searchValue || query)?.trim() === ''
                         ? 'Please enter a search key'
                         : 'Press Enter or click Search'}
                 </Typography>
+
+                {/* Search Input */}
                 <TextField
                     fullWidth
                     variant="outlined"
                     placeholder="Search documents..."
-                    value={query}
+                    value={searchValue !== undefined ? searchValue : query} // Use searchValue if passed, otherwise default to store query
                     onChange={(e) => {
                         setTouched(true);
-                        setQuery(e.target.value);
+                        setQuery(e.target.value); // Update store query
                     }}
                     onKeyDown={handleKeyPress}
-                    error={touched && devMode === 'live' && query.trim() === ''}
+                    error={touched && devMode === 'live' && (searchValue || query)?.trim() === ''}
                     size="small"
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
                                 <Tooltip title="Search">
-                            <span>
-                                <Button
-                                    onClick={handleSearch}
-                                    variant="contained"
-                                    size="small"
-                                    disabled={devMode === 'live' && !query.trim()}
-                                    sx={{ minWidth: 'auto', px: 2 }}
-                                >
-                                    <SearchIcon fontSize="small" />
-                                </Button>
-                            </span>
+                                    <span>
+                                        <Button
+                                            onClick={handleSearch}
+                                            variant="contained"
+                                            size="small"
+                                            disabled={devMode === 'live' && !(searchValue || query)?.trim()}
+                                            sx={{ minWidth: 'auto', px: 2 }}
+                                        >
+                                            <SearchIcon fontSize="small" />
+                                        </Button>
+                                    </span>
                                 </Tooltip>
                             </InputAdornment>
                         ),
@@ -85,7 +93,6 @@ const SearchBar = () => {
             </Box>
         </Tooltip>
     );
-
 };
 
 export default SearchBar;

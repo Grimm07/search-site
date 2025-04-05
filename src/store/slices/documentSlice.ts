@@ -1,4 +1,3 @@
-// src/store/slices/documentSlice.ts
 import { StateCreator } from 'zustand';
 import {
     DocumentMeta,
@@ -17,8 +16,14 @@ export interface UserInteractionSlice {
     isLoading: boolean;
     error: string | null;
 
+    // New state
+    viewSections: Record<string, any> | null; // Parsed JSON or dynamic data
+
     setQuery: (query: string) => void;
     setController: (controller: AbortController | null) => void;
+
+    // New method for setting view sections
+    setViewSections: (sections: Record<string, any> | null) => void;
 
     list: (params: Record<string, any>) => Promise<void>;
     retrieve: (id: string) => Promise<void>;
@@ -39,6 +44,8 @@ export const createUserInteractionSlice: StateCreator<
     isLoading: false,
     error: null,
 
+    viewSections: null, // New state
+
     setQuery: (query) =>
         set(() => ({
             query,
@@ -46,6 +53,9 @@ export const createUserInteractionSlice: StateCreator<
         })),
 
     setController: (controller) => set({ controller }),
+
+    // New action for updating viewSections
+    setViewSections: (sections: Record<string, any> | null) => set({ viewSections: sections }),
 
     list: async (params) => {
         const controller = new AbortController();

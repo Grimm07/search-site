@@ -5,9 +5,10 @@ import DocumentReview from '../documentReview/DocumentReview'; // assuming this 
 import { useState } from 'react';
 
 const SearchResultsAccordion = () => {
-    const { results, retrieve, currentDocument } = useInteractionStore();
+    const { results, viewSections, retrieve, currentDocument } = useInteractionStore();
     const [expanded, setExpanded] = useState<string | false>(false);
 
+    // Handle accordion expand/collapse actions
     const handleChange = (id: string) => async (_event: React.SyntheticEvent, isExpanded: boolean) => {
         setExpanded(isExpanded ? id : false);
         if (isExpanded) {
@@ -15,9 +16,12 @@ const SearchResultsAccordion = () => {
         }
     };
 
+    // Decide which dataset to use: `viewSections` (e.g., file-based content) or `results` (API results)
+    const documents = viewSections?.sections || results;
+
     return (
         <>
-            {results.map((doc) => (
+            {documents.map((doc: any) => (
                 <Accordion
                     key={doc.id}
                     expanded={expanded === doc.id}
