@@ -1,16 +1,18 @@
 // components/common/ThemeToggle.tsx
 import React from 'react';
-import ToggleSwitch from '@/components/common/ToggleSwitch';
+import { IconButton, Tooltip } from '@mui/material';
+import { DarkMode, LightMode } from '@mui/icons-material';
 import { useAppStore } from '@/store/useAppStore';
 
 const ThemeToggle: React.FC = () => {
     const { mode, toggleMode } = useAppStore();
+
     return (
-        <ToggleSwitch
-            label="Dark Mode"
-            checked={mode === 'dark'}
-            onChange={() => toggleMode()}
-        />
+        <Tooltip title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+            <IconButton color="inherit" onClick={toggleMode}>
+                {mode === 'dark' ? <LightMode /> : <DarkMode />}
+            </IconButton>
+        </Tooltip>
     );
 };
 
