@@ -1,35 +1,36 @@
-
-import React from 'react';
-import ReviewFieldGridRow from './ReviewFieldGridRow';
 import { DocumentSummary } from '@/types/search';
+import { FieldConfig } from '@/schemas/reviewLayout';
+import ReviewFieldGridRow from '@/components/common/ReviewFieldGridRow';
 
 export interface ReviewFieldGridProps {
-    metadata: Record<string, any>;
     summary?: DocumentSummary;
+    metadata: Record<string, any>;
+    fieldConfigMap: Record<string, FieldConfig>;
+    onChange?: (field: string, value: string | boolean) => void;
+    corrections?: Record<string, string | boolean>;
 }
 
-function inferFieldType(value: any): 'text' | 'textarea' | 'select' | 'checkbox' {
-    if (typeof value === 'boolean') return 'checkbox';
-    if (value === 'true' || value === 'false') return 'checkbox';
-    if (typeof value === 'string' && value.length > 200) return 'textarea';
-    return 'text';
-}
-
-const ReviewFieldGrid: React.FC<ReviewFieldGridProps> = ({ metadata, summary }) => {
+const ReviewFieldGrid: React.FC<ReviewFieldGridProps> = ({
+                                                             metadata,
+                                                             summary,
+                                                             fieldConfigMap,
+                                                             onChange,
+                                                             corrections = {},
+                                                         }) => {
     return (
         <>
-            {Object.entries(metadata).map(([field, value]) => {
-                const systemValue = summary?.[field] ?? value;
-                const inferredType = inferFieldType(systemValue);
+            {Object.entries(fieldConfigMap).map(([field, config]) => {
+                const systemValue = summary?.[field] ?? metadata?.[field] ?? '';
 
                 return (
                     <ReviewFieldGridRow
                         key={field}
                         field={field}
-                        value={value}
-                        correctedValue={value}
-                        onCorrectionChange={() => {}}
-                        correctionInputType={inferredType}
+                        value={String(systemValue ?? '')}
+                        correctedValue={corrections[field]}
+                        onCorrectionChange={(f, v) => onChange?.(f, v)}
+                        correctionInputType={config.inputType}
+                        correctionOptions={config.options}
                     />
                 );
             })}

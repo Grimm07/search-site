@@ -6,7 +6,6 @@ const mockDocument: RetrievedContent = {
     id: 'doc-001',
     docId: 'doc-001',
     contentType: 'image',
-    data: 'https://via.placeholder.com/600x800?text=Fallback',
     summary: {
         Status: 'Approved',
         Confirmed: true,

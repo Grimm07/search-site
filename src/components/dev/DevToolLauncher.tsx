@@ -10,7 +10,6 @@ import {
 import BugReportIcon from '@mui/icons-material/BugReport';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { DevTool } from '@/types/devtools';
-import DevToolPanel from "@/components/dev/DevToolPanel";
 
 interface DevToolLauncherProps {
     tools: DevTool[];
@@ -88,9 +87,7 @@ const DevToolLauncher: React.FC<DevToolLauncherProps> = ({ tools }) => {
 
                                 {/* If renderable, show panel under the icon */}
                                 {activeToolId === tool.id && tool.render && (
-                                    <DevToolPanel dense>
-                                        {tool.render()}
-                                    </DevToolPanel>
+                                    tool.render()
                                 )}
 
                             </motion.div>

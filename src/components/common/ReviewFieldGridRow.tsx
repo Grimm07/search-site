@@ -2,48 +2,41 @@ import React from 'react';
 import {
     Grid,
     Typography,
-    Checkbox,
     TextField,
-    FormControlLabel,
     Box,
 } from '@mui/material';
+import DropdownControl from '@/components/common/DropdownControl';
+import CheckboxControl from '@/components/common/CheckboxControl';
 
-interface ReviewFieldGridRowProps {
-    field: string;
-    value: string;
-    correctedValue?: string | boolean;
-    onCorrectionChange: (value: string | boolean) => void;
+export interface ReviewFieldGridRowProps {
+    field: string; // Field key like "InvoiceNumber"
+    value: string; // Extracted system value
+    correctedValue?: string | boolean; // Editable user value
     correctionInputType?: 'text' | 'textarea' | 'select' | 'checkbox';
-    correctionOptions?: string[]; // required if type is 'select'
+    correctionOptions?: string[]; // For selects
+    onCorrectionChange: (field: string, value: string | boolean) => void;
 }
 
 const ReviewFieldGridRow: React.FC<ReviewFieldGridRowProps> = ({
                                                                    field,
                                                                    value,
                                                                    correctedValue,
-                                                                   onCorrectionChange,
                                                                    correctionInputType = 'text',
                                                                    correctionOptions = [],
+                                                                   onCorrectionChange,
                                                                }) => {
+    const label = field; // Label should be passed pre-resolved, or derived cleanly
+
     const renderCorrectionInput = () => {
         switch (correctionInputType) {
             case 'select':
                 return (
-                    <TextField
-                        select
-                        label="Correction"
-                        size="small"
-                        fullWidth
-                        value={correctedValue}
-                        onChange={(e) => onCorrectionChange(e.target.value)}
-                        SelectProps={{ native: true }}
-                    >
-                        {correctionOptions.map((option) => (
-                            <option key={option} value={option}>
-                                {option}
-                            </option>
-                        ))}
-                    </TextField>
+                    <DropdownControl
+                        label={`Edit ${label}`}
+                        value={correctedValue as string}
+                        options={correctionOptions ?? []}
+                        onChange={(v) => onCorrectionChange(field, v)}
+                    />
                 );
 
             case 'textarea':
@@ -52,23 +45,19 @@ const ReviewFieldGridRow: React.FC<ReviewFieldGridRowProps> = ({
                         multiline
                         rows={3}
                         size="small"
-                        placeholder="Enter correction"
+                        label={`Edit ${label}`}
                         value={correctedValue}
-                        onChange={(e) => onCorrectionChange(e.target.value)}
+                        onChange={(e) => onCorrectionChange(field, e.target.value)}
                         fullWidth
                     />
                 );
 
             case 'checkbox':
                 return (
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={!!correctedValue}
-                                onChange={(e) => onCorrectionChange(e.target.checked)}
-                            />
-                        }
-                        label="Correct?"
+                    <CheckboxControl
+                        label={`Mark ${label}`}
+                        checked={!!correctedValue}
+                        onChange={(v) => onCorrectionChange(field, v)}
                     />
                 );
 
@@ -77,9 +66,9 @@ const ReviewFieldGridRow: React.FC<ReviewFieldGridRowProps> = ({
                 return (
                     <TextField
                         size="small"
-                        placeholder="Enter correction"
+                        label={`Edit ${label}`}
                         value={correctedValue}
-                        onChange={(e) => onCorrectionChange(e.target.value)}
+                        onChange={(e) => onCorrectionChange(field, e.target.value)}
                         fullWidth
                     />
                 );
@@ -88,19 +77,19 @@ const ReviewFieldGridRow: React.FC<ReviewFieldGridRowProps> = ({
 
     return (
         <Grid container spacing={2} alignItems="center">
-            {/* Label */}
+            {/* Field label */}
             <Grid item xs={4}>
                 <Typography variant="body2" fontWeight="bold">
-                    {field}
+                    {label}
                 </Typography>
             </Grid>
 
-            {/* System value */}
+            {/* System/extracted value */}
             <Grid item xs={4}>
                 <Typography variant="body2">{value}</Typography>
             </Grid>
 
-            {/* User input */}
+            {/* Editable user response */}
             <Grid item xs={4}>
                 <Box display="flex" flexDirection="column" gap={1}>
                     {renderCorrectionInput()}

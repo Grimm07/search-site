@@ -15,24 +15,31 @@ interface SearchBarProps {
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ searchValue }) => {
-    const { query, setQuery, devMode, uploadedFile, list } = useInteractionStore();
+    const { query, setQuery, devMode, uploadedFile, list, setError} = useInteractionStore();
     const [touched, setTouched] = useState(false);
 
     const handleSearch = useCallback(() => {
         if (!query && devMode === 'live') return; // Validation for live mode
 
+        // Handle different devModes to execute corresponding API calls
         switch (devMode) {
             case 'live':
-                return list({ key: query });
+                if (!query?.trim()) return;  // Avoid searching with empty query
+                return list({ query: query }).catch((error) => {
+                    // Handle error if list fails (e.g., 404)
+                    setError(error.message); // Assuming you have an `error` setter in the store
+                });
 
             case 'mock':
-                return list({ key: 'mock-key' });
+                return list({ query: 'mock-key' });
 
             case 'replay':
                 if (uploadedFile) {
                     const replayKey = uploadedFile.name.replace(/\.[^/.]+$/, '');
-                    return list({ key: replayKey });
+                    return list({ query: replayKey });
                 }
+                return;
+            default:
                 return;
         }
     }, [query, devMode, uploadedFile, list]);
@@ -40,8 +47,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchValue }) => {
     const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             setTouched(true);
-            handleSearch();
+            handleSearch(); // Trigger search on Enter key
         }
+    };
+
+    const handleButtonClick = () => {
+        setTouched(true);
+        handleSearch(); // Trigger search on button click
     };
 
     return (
@@ -51,7 +63,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchValue }) => {
                     variant="body2"
                     color={touched && devMode === 'live' && (searchValue || query)?.trim() === '' ? 'error' : 'text.secondary'}
                 >
-                    {/* Validation or helper text */}
                     {touched && devMode === 'live' && (searchValue || query)?.trim() === ''
                         ? 'Please enter a search key'
                         : 'Press Enter or click Search'}
@@ -62,6 +73,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchValue }) => {
                     fullWidth
                     variant="outlined"
                     placeholder="Search documents..."
+                    aria-label="searchbar"
                     value={searchValue !== undefined ? searchValue : query} // Use searchValue if passed, otherwise default to store query
                     onChange={(e) => {
                         setTouched(true);
@@ -76,7 +88,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchValue }) => {
                                 <Tooltip title="Search">
                                     <span>
                                         <Button
-                                            onClick={handleSearch}
+                                            aria-label="search button"
+                                            onClick={handleButtonClick} // Use the new handleButtonClick
                                             variant="contained"
                                             size="small"
                                             disabled={devMode === 'live' && !(searchValue || query)?.trim()}

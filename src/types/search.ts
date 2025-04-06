@@ -20,9 +20,6 @@ export interface RetrievedContent {
     docId: string;
     contentType: DocumentType;
 
-    // If multiple images, this is either the "primary" or the one displayed by default
-    data: string;
-
     // Rich metadata including extracted fields, titles, etc.
     metadata?: Record<string, any>;
 
@@ -30,7 +27,7 @@ export interface RetrievedContent {
     summary?: DocumentSummary;
 
     images?: {
-        primary: string;
+        primary?: string;
         secondary?: string;
         tertiary?: string;
     };
@@ -46,16 +43,9 @@ export interface FeedbackPayload {
     corrections: FieldCorrection[];
 }
 
-export interface DocumentMeta {
-    id: string;
-    title: string;
-    thumbnailUrl?: string;
-    fields: Record<string, string>;
-    // other optional metadata if needed
-}
-
 export type SearchRequestPayload = {
     id?: string;
+    query: string;
     key?: string;
     uuid?: string;
     email?: string;

@@ -9,8 +9,6 @@ const mockResults: RetrievedContent[] = [
         id: 'doc-001',
         docId: 'doc-001',
         contentType: 'image',
-        data: 'https://via.placeholder.com/600x800?text=Preview',
-        fields: {},
         summary: {
             Status: 'Approved',
             Notes: 'Reviewed and finalized',
@@ -23,8 +21,6 @@ const mockResults: RetrievedContent[] = [
         id: 'doc-002',
         docId: 'doc-002',
         contentType: 'image',
-        data: 'https://via.placeholder.com/600x800?text=Preview',
-        fields: {},
         summary: {
             Status: 'Pending',
             Vendor: 'ACME Corp',
@@ -37,8 +33,6 @@ const mockResults: RetrievedContent[] = [
         id: 'doc-003',
         docId: 'doc-003',
         contentType: 'image',
-        data: 'https://via.placeholder.com/600x800?text=Preview',
-        fields: {},
         summary: {
             Status: 'In Progress',
         },

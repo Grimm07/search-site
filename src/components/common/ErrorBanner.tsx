@@ -1,17 +1,17 @@
-// components/ErrorBanner.tsx
-import React from 'react';
 import { Alert, AlertTitle, Box } from '@mui/material';
 
 interface ErrorBannerProps {
-    message?: string;
+    status: number;
+    message: string;
+    title?: string;
 }
 
-const ErrorBanner: React.FC<ErrorBannerProps> = ({ message }) => {
+const ErrorBanner: React.FC<ErrorBannerProps> = ({ status, message, title }) => {
     return (
-        <Box sx={{ mx: 'auto', mt: 2, maxWidth: '80%' }}>
-            <Alert severity="error" variant="outlined" sx={{ borderRadius: 2 }}>
-                <AlertTitle>Something went wrong!</AlertTitle>
-                {message || 'An unexpected error occurred. Please try again or refresh the page.'}
+        <Box sx={{ width: '100%', mt: 2 }}>
+            <Alert severity="error" variant="outlined">
+                <AlertTitle>{title || `Error ${status}`}</AlertTitle>
+                {message}
             </Alert>
         </Box>
     );

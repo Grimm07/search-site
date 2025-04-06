@@ -38,10 +38,10 @@
     "paths": {
       "@/*": ["*"]
     },
-    "types": ["vite/client", "vitest/globals", "msw"]
+    "types": ["vite/client", "vitest/globals", "msw", "@playwright/test"]
   },
   // Include your source folder
-  "include": ["src"],
+  "include": ["src", "vite.config.ts", "playwright.config.ts"],
   // References to other tsconfigs if needed
 //  "references": [
 //    { "path": "./tsconfig.node.json" },

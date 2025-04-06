@@ -1,21 +1,14 @@
-import { useRef } from 'react';
-import { Box, Button, Typography, TextField } from '@mui/material';
+import { useRef, useEffect } from 'react';
 import { useInteractionStore } from '@/store/useInteractionStore';
 
+// todo update this file to handle your type of data
+
 const FileUploadTrigger = () => {
-    // Reference to the file input
     const inputRef = useRef<HTMLInputElement>(null);
+    const { setQuery, setViewSections, setSearchState, list } = useInteractionStore();
 
-    // Access `query` and `viewSections` state from the store
-    const { query, setQuery, setViewSections } = useInteractionStore();
-
-    /**
-     * Handles file upload and updates global store states.
-     * @param file - The uploaded file to process.
-     */
     const handleFile = async (file: File) => {
         try {
-            // Read the file content using FileReader
             const fileContent = await new Promise<string>((resolve, reject) => {
                 const reader = new FileReader();
 
@@ -28,13 +21,11 @@ const FileUploadTrigger = () => {
                 };
 
                 reader.onerror = (error) => reject(error);
-                reader.readAsText(file); // Read the file content
+                reader.readAsText(file);
             });
 
-            // Parse the file content as JSON
             const parsedData = JSON.parse(fileContent);
 
-            // Update the search query if it exists
             if (parsedData?.title) {
                 setQuery(parsedData.title);
             } else {
@@ -42,47 +33,35 @@ const FileUploadTrigger = () => {
                 setQuery('');
             }
 
-            // Update the view sections
             setViewSections(parsedData);
+
+            // Trigger the search
+            setSearchState('searching');
+            await list({ query: parsedData.title });
         } catch (error) {
             console.error('Error processing the uploaded file:', error);
+            useInteractionStore.setState({
+                error: 'Failed to process uploaded file.',
+                searchState: 'error',
+            });
         }
     };
 
+    useEffect(() => {
+        inputRef.current?.click();
+    }, []);
+
     return (
-        <Box>
-            {/* Instruction */}
-            <Typography variant="body2" mb={1}>
-                Upload a file to populate the search query and view sections dynamically
-            </Typography>
-
-            {/* Search Bar */}
-            <TextField
-                label="Search"
-                variant="outlined"
-                value={query} // Controlled by `query` in global state
-                onChange={(e) => setQuery(e.target.value)} // Allow user to override
-                fullWidth
-                sx={{ mb: 2 }}
-            />
-
-            {/* Hidden File Input */}
-            <input
-                ref={inputRef}
-                type="file"
-                hidden
-                accept=".json"
-                onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleFile(file); // Process uploaded file
-                }}
-            />
-
-            {/* File Upload Button */}
-            <Button variant="outlined" onClick={() => inputRef.current?.click()}>
-                Choose File
-            </Button>
-        </Box>
+        <input
+            ref={inputRef}
+            type="file"
+            accept=".json"
+            onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFile(file);
+            }}
+            style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden', border: 'none', padding: 0, margin: 0 }}
+        />
     );
 };
 

@@ -1,17 +1,7 @@
 // store/slices/devSlice.ts
 import {StateCreator} from "zustand";
+import {DevSlice} from "@/types/slices"
 
-export type DevMode = 'live' | 'mock' | 'replay';
-
-export interface DevSlice {
-    devMode: DevMode;
-    setDevMode: (mode: DevMode) => void;
-    uploadedFile: File | null;
-    setUploadedFile: (file: File) => void;
-    clearUploadedFile: () => void;
-    mockMode: boolean;
-    toggleMockMode: () => void;
-}
 
 export const createDevSlice: StateCreator<DevSlice> = (set) => ({
     devMode: 'live',

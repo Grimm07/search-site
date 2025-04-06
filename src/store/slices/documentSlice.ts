@@ -1,98 +1,139 @@
+// slices/createDocumentSlice.ts
 import { StateCreator } from 'zustand';
-import {
-    RetrievedContent,
-    FeedbackPayload,
-} from '@/types/search';
-import { detectSearchKeyFormat, SearchKeyFormat } from '@/utils/searchKeyFormat';
-import { listDocuments, retrieveDocument, updateFeedback } from '@/lib/api';
+import { DocumentSlice } from '@/types/slices';
+import {listDocuments, retrieveDocument, updateFeedback} from '@/lib/api';
+import {FeedbackPayload, RetrievedContent} from '@/types/search';
 
-export interface UserInteractionSlice {
-    query: string;
-    searchFormat: SearchKeyFormat;
-    results: RetrievedContent[];
-    controller: AbortController | null;
-    currentDocument: RetrievedContent | null;
-    isListLoading: boolean;
-    isRetrieveLoading: boolean;
-    error: string | null;
-
-    // New state
-    viewSections: Record<string, any> | null; // Parsed JSON or dynamic data
-
-    setQuery: (query: string) => void;
-    setController: (controller: AbortController | null) => void;
-
-    // New method for setting view sections
-    setViewSections: (sections: Record<string, any> | null) => void;
-
-    list: (params: Record<string, any>) => Promise<void>;
-    retrieve: (id: string) => Promise<void>;
-    update: (payload: FeedbackPayload) => Promise<void>;
-}
-
-export const createUserInteractionSlice: StateCreator<
-    UserInteractionSlice,
+export const createDocumentSlice: StateCreator<
+    DocumentSlice,
     [],
     [],
-    UserInteractionSlice
-> = (set) => ({
-    query: '',
-    searchFormat: 'unknown',
-    results: [],
-    currentDocument: null,
-    controller: null,
-    isListLoading: false,
-    isRetrieveLoading: false,
-    error: null,
-
-    viewSections: null, // New state
-
-    setQuery: (query) =>
-        set(() => ({
-            query,
-            searchFormat: detectSearchKeyFormat(query),
-        })),
-
-    setController: (controller) => set({ controller }),
-
-    // New action for updating viewSections
-    setViewSections: (sections: Record<string, any> | null) => set({ viewSections: sections }),
-
-    list: async (params) => {
-        const controller = new AbortController();
-        set({ isListLoading: true, error: null, controller });
+    DocumentSlice
+> = (set, get) => {
+    const fetchOptionalImagesIfNeeded = async (docId: string) => {
+        const doc = get().results.find((r) => r.docId === docId);
+        if (!doc) return;
 
         try {
-            const data = await listDocuments(params, controller);
-            set({ results: data.results || [] });
-        } catch (err: any) {
-            if (err.name !== 'AbortError') {
-                set({ error: err.message ?? 'List failed' });
+            const moreImages: Partial<RetrievedContent['images']> = await fetchImageVariants(docId);
+            set((state) => ({
+                results: state.results.map((r) => {
+                    if (r.docId !== docId) return r;
+
+                    const mergedImages = {
+                        ...r.images,
+                        ...moreImages,
+                    };
+
+                    // Ensure required fields like `primary` are preserved
+                    if (!mergedImages.primary && r.images?.primary) {
+                        mergedImages.primary = r.images.primary;
+                    }
+
+                    return { ...r, images: mergedImages };
+                }),
+            }));
+        } catch (e) {
+            console.warn(`Optional image load failed for ${docId}`, e);
+        }
+    };
+
+    return {
+        results: [],
+        currentDocument: null,
+        docLoadState: {},
+        isListLoading: false,
+        isRetrieveLoading: false,
+        controller: null,
+        error: null,
+        setError: (error: string | null) => set({error}),
+        clearError: () => set({ error: null }),
+        setResults: (results) => set({ results }),
+        mocksEnabled: false,
+        setMocksEnabled: (enabled: boolean) => set({ mocksEnabled: enabled }),
+
+        setDocLoadState: (docId, state) =>
+            set((s) => ({
+                docLoadState: {
+                    ...s.docLoadState,
+                    [docId]: state,
+                },
+            })),
+
+        setController: (controller) => set({ controller }),
+
+        viewSections: null,
+
+        setViewSections: (sections: Record<string, any> | null) => set({ viewSections: sections }),
+
+
+        list: async (params) => {
+            const controller = new AbortController();
+
+            set({
+                isListLoading: true,
+                controller,
+                results: [],
+                docLoadState: {},
+            });
+
+            try {
+                const data = await listDocuments(params, controller);
+                const docs = data.results || [];
+
+                set({ results: docs });
+
+                await Promise.all(
+                    docs.map(async (doc) => {
+                        const { docId } = doc;
+                        get().setDocLoadState(docId, 'loading');
+
+                        try {
+                            const fullDoc = await retrieveDocument(docId);
+                            set((state) => ({
+                                results: state.results.map((r) =>
+                                    r.docId === docId ? { ...r, ...fullDoc } : r
+                                ),
+                            }));
+                            get().setDocLoadState(docId, 'success');
+                            fetchOptionalImagesIfNeeded(docId);
+                        } catch (e) {
+                            console.warn(`Failed to retrieve summary for ${docId}`, e);
+                            get().setDocLoadState(docId, 'error');
+                        }
+                    })
+                );
+            } finally {
+                set({ isListLoading: false, controller: null });
             }
-        } finally {
-            set({ isListLoading: false, controller: null });
-        }
-    },
+        },
 
-    retrieve: async (id) => {
-        set({ isRetrieveLoading: true, error: null });
+        retrieve: async (id) => {
+            set({ isRetrieveLoading: true });
 
-        try {
-            const doc = await retrieveDocument(id);
-            set({ currentDocument: doc });
-        } catch (err: any) {
-            set({ error: err.message ?? 'Retrieve failed' });
-        } finally {
-            set({ isRetrieveLoading: false });
-        }
-    },
+            try {
+                const doc = await retrieveDocument(id);
+                set({ currentDocument: doc });
+            } finally {
+                set({ isRetrieveLoading: false });
+            }
+        },
+        update: async (payload: FeedbackPayload) => {
+            try {
+                await updateFeedback(payload);
+            } catch (err: any) {
+                set({ error: err.message ?? 'Update failed' });
+                console.error('Update failed:', err);
+            }
+        },
+    };
+};
 
-    update: async (payload) => {
-        try {
-            await updateFeedback(payload);
-        } catch (err: any) {
-            set({ error: err.message ?? 'Update failed' });
-            console.error('Update failed:', err);
-        }
-    },
-});
+// Mocked variant image loader (to be replaced)
+const fetchImageVariants = async (docId: string) => {
+    await new Promise((r) => setTimeout(r, 300));
+    return {
+        secondary: `https://via.placeholder.com/150?text=Secondary+${docId}`,
+        tertiary: `https://via.placeholder.com/150?text=Tertiary+${docId}`,
+    };
+};

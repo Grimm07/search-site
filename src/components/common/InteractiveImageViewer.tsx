@@ -86,7 +86,15 @@ const InteractiveImageViewer: React.FC<InteractiveImageViewerProps> = ({ imageId
     }
 
     return (
-        <Box position="relative" width="100%" height="100%" borderRadius={2} overflow="hidden">
+        <Box
+            position="relative"
+            width="100%"
+            height="100%"
+            borderRadius={2}
+            overflow="hidden"
+            role="img" // ✅ acts like an image
+            aria-label="Scanned document image" // ✅ adds accessible description
+        >
             {isLoading[imageId] && (
                 <Box
                     position="absolute"

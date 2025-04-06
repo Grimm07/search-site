@@ -53,7 +53,7 @@ const SearchResultsAccordion: React.FC = () => {
             >
                 <Box display="flex" flexDirection="column" gap={4}>
                     {results.map((result) => (
-                        <DocumentReviewLayout document={result} />
+                        <DocumentReviewLayout document={result} layoutFlags={{isInvoice: result.metadata?.docType === 'invoice'}} />
                     ))}
                 </Box>
             </AccordionDetails>

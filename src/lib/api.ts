@@ -26,22 +26,18 @@ export async function retrieveDocument(id: string): Promise<RetrievedContent> {
 
     if (contentType.startsWith('image')) {
         // Make sure this Blob is a browser-native one
-        const blob: globalThis.Blob = await res.blob(); // 👈 ensures it's not confused with Node's Blob
 
         return {
             id,
             docId: id,
-            contentType: 'image',
-            data: URL.createObjectURL(blob), // ✅ safe now
+            contentType: 'image'
         };
     } else {
-        const text = await res.text();
 
         return {
             id,
             docId: id,
             contentType: 'text',
-            data: text,
         };
     }
 }
