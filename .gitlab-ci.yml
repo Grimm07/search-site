@@ -1,0 +1,57 @@
+stages:
+  - build
+  - report
+  - deploy
+
+build:
+  stage: build
+  script:
+    - npm ci
+    - npm run lint
+    - npm run typecheck
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1h
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+report:
+  stage: report
+  script:
+    - ./scripts/run-tests.sh
+    - ./scripts/generate-markdown-report.sh
+    - ./scripts/generate-html-report.sh
+  artifacts:
+    paths:
+      - public/
+    reports:
+      dotenv: public/$CI_COMMIT_REF_NAME/info.env
+      metrics: .gitlab/ci_dashboard.yml
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+
+pages:
+  stage: deploy
+  script:
+    - echo "Deployed"
+  artifacts:
+    paths:
+      - public/
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+
+comment-pages-url:
+  stage: deploy
+  image: curlimages/curl:latest
+  script:
+    - apk add jq curl bc
+    - chmod +x scripts/post-mr-comment.sh
+    - ./scripts/post-mr-comment.sh
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" || $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "dev"'
+  needs: ["report", "pages"]
+  dependencies: []

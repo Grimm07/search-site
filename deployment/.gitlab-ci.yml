@@ -1,0 +1,64 @@
+stages:
+  - build
+  - deploy
+  - approval
+  - prod_deploy
+
+# Define global variables
+variables:
+  RETRY_COUNT: 3  # Retry count for deployments
+  DEPLOY_SCRIPT_PATH: "scripts/deploy.sh"  # Path to the shared deployment script
+
+# Build artifacts job (assuming this happens in an upstream pipeline)
+build:
+  stage: build
+  script:
+    - echo "Building artifacts for the project..."
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 week
+
+# Deploy each component dynamically based on user input (for environment selection)
+deploy_projects:
+  stage: deploy
+  script:
+    - ./deploy.sh
+  needs:
+    - build
+  retry:
+    max: $RETRY_COUNT
+    when:
+      - always
+  only:
+    - main
+
+# Manual approval step before production deployment
+approval:
+  stage: approval
+  script:
+    - echo "Waiting for approval..."
+  when: manual
+  allow_failure: false
+  only:
+    - main
+  environment:
+    name: production
+
+# Production deployment (triggered after approval)
+prod_deploy:
+  stage: prod_deploy
+  script:
+    - echo "Deploying to production..."
+    - ./prod_deploy.sh  # Assuming this is another external script
+  needs:
+    - approval
+  retry:
+    max: 3
+    when:
+      - always
+  only:
+    - main
+  environment:
+    name: production
+    url: https://production.example.com

@@ -1,0 +1,48 @@
+graph TD
+%% App Store Slices
+    subgraph AppStore [App Store: State Slices]
+        A[useAppStore] --> B[Auth Slice]
+        A[useAppStore] --> C[Theme Slice]
+        A[useAppStore] --> D[Dev Slice]
+        A[useAppStore] --> E[Document Slice]
+    end
+
+%% User Preferences & Config
+    subgraph PreferencesAndConfig [User Preferences & Config]
+        G[User Preferences Slice] --> H[Config Slice]
+    end
+
+%% Image & Error Handling
+    subgraph ImageErrorStore [Image & Error Handling]
+        K[Image Slice]
+        F[Error Slice]
+    end
+
+%% Interaction Store
+    subgraph InteractionStore [Interaction Store]
+        L[Search Slice]
+        M[Document Slice]
+    end
+
+%% Actions for Each Slice
+    subgraph AuthActions [Auth Actions]
+        P[setAuth]
+    end
+
+    subgraph ThemeActions [Theme Actions]
+        Q[setTheme]
+    end
+
+    subgraph DevActions [Dev Actions]
+        R[setDevMode]
+    end
+
+    subgraph DocumentActions [Document Actions]
+        S[setDocuments]
+    end
+
+%% Action Flow Connections
+    P --> B
+    Q --> C
+    R --> D
+    S --> E

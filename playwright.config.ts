@@ -1,13 +1,36 @@
 // playwright.config.ts
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-    use: {
-        headless: false,  // Run tests in headless mode (set to `false` for visual testing)
-        video: 'retain-on-failure', // Record video only on failure (use 'on' for always recording)
-        trace: 'on', // Record traces (useful for debugging)
-    },
     testDir: './src/test',
-    // reporter: 'list', // or 'html' for pretty output
-    reporter: [['html', { open: 'never' }]],
+    timeout: 30 * 1000,
+    expect: { timeout: 5000 },
+
+    use: {
+        headless: false,
+        baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5173',
+        video: 'retain-on-failure',
+        trace: 'on',
+        screenshot: 'only-on-failure',
+    },
+
+    reporter: [['html', { open: 'never' }], ['list']],
+
+    projects: [
+        {
+            name: 'Chromium',
+            use: { ...devices['Desktop Chrome'] },
+        },
+        {
+            name: 'Firefox',
+            use: { ...devices['Desktop Firefox'] },
+        },
+        {
+            name: 'WebKit',
+            use: { ...devices['Desktop Safari'] },
+        },
+    ],
+
+    // Optional: global setup for MSW mock server
+    // globalSetup: './src/test/globalSetup.ts',
 });

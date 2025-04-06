@@ -1,14 +1,18 @@
 // src/auth/msalConfig.ts
-import { PublicClientApplication } from '@azure/msal-browser';
+import { Configuration } from '@azure/msal-browser';
+import { useConfigStore } from '@/store/useConfigStore'; // or wherever your root store is
 
-export const msalInstance = new PublicClientApplication({
+const tenantId = useConfigStore.getState().tenantId;
+const clientId = useConfigStore.getState().clientId;
+
+export const msalConfig: Configuration = {
     auth: {
-        clientId: '<your-client-id>',
-        authority: 'https://login.microsoftonline.com/<tenant-id>',
+        clientId,
+        authority: `https://login.microsoftonline.com/${tenantId}`,
         redirectUri: window.location.origin,
     },
     cache: {
-        cacheLocation: 'memoryStorage', // default: sessionStorage; override for SSR/SPA
-        storeAuthStateInCookie: false,
+        cacheLocation: 'sessionStorage',
+        storeAuthStateInCookie: true,
     },
-});
+};

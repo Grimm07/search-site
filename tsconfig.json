@@ -41,7 +41,12 @@
     "types": ["vite/client", "vitest/globals", "msw", "@playwright/test"]
   },
   // Include your source folder
-  "include": ["src", "vite.config.ts", "playwright.config.ts"],
+  "include": [
+    "src",
+    "vite.config.ts",
+    "playwright.config.ts",
+    "node_modules/vitest/globals.d.ts"
+  ]
   // References to other tsconfigs if needed
 //  "references": [
 //    { "path": "./tsconfig.node.json" },

@@ -1,0 +1,13 @@
+graph TD
+A[React Component] --> B["use()"]
+B --> C[Async Fetch Data]
+C --> D["Call Zustand Action (Fetch Data)"]
+D --> E[Zustand Updates State]
+E --> F[React Suspense Suspends until Data is Ready]
+F --> G[Render UI with Data]
+G --> H[Store Data in Zustand for Future Use]
+classDef react fill:#ff6347,stroke:#fff,stroke-width:2px;
+class A,B,G react;
+subgraph "React 19 with use()"
+F
+end

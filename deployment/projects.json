@@ -1,0 +1,20 @@
+{
+  "projects": [
+    {
+      "name": "projectA",
+      "repo_url": "https://gitlab.com/your-org/projectA",
+      "downstream_pipeline_trigger": "https://gitlab.com/api/v4/projects/{project_id}/trigger/pipeline",
+      "version": "v1.0.0",
+      "branch": "main",
+      "deployment_env": "staging"
+    },
+    {
+      "name": "projectB",
+      "repo_url": "https://gitlab.com/your-org/projectB",
+      "downstream_pipeline_trigger": "https://gitlab.com/api/v4/projects/{project_id}/trigger/pipeline",
+      "version": "v2.0.0",
+      "branch": "main",
+      "deployment_env": "production"
+    }
+  ]
+}

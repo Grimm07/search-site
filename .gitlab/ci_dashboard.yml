@@ -1,0 +1,22 @@
+metrics:
+  - title: "📊 HTML Test Report"
+    link: "$CI_PAGES_URL/$CI_COMMIT_REF_NAME/index.html"
+    value: "Open"
+    format: string
+
+  - title: "📝 Markdown Summary"
+    link: "$CI_PAGES_URL/$CI_COMMIT_REF_NAME/report-$CI_COMMIT_SHORT_SHA.md"
+    value: "View"
+    format: string
+
+  - title: "✅ Passed Tests"
+    value: "$PASS_COUNT"
+    format: int
+
+  - title: "❌ Failed Tests"
+    value: "$FAIL_COUNT"
+    format: int
+
+  - title: "📈 Coverage %"
+    value: "$COVERAGE_PERCENT"
+    format: float

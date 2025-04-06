@@ -12,8 +12,7 @@ const config: StorybookConfig = {
     },
     core: {
         builder: '@storybook/builder-vite', // 👈 The builder enabled here.
-    },
-    previewAnnotations: ['./preview.ts'],
+    }
 };
 
 export default config;
