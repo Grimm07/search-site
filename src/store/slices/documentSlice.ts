@@ -1,6 +1,5 @@
 import { StateCreator } from 'zustand';
 import {
-    DocumentMeta,
     RetrievedContent,
     FeedbackPayload,
 } from '@/types/search';
@@ -10,10 +9,11 @@ import { listDocuments, retrieveDocument, updateFeedback } from '@/lib/api';
 export interface UserInteractionSlice {
     query: string;
     searchFormat: SearchKeyFormat;
-    results: DocumentMeta[];
+    results: RetrievedContent[];
     controller: AbortController | null;
     currentDocument: RetrievedContent | null;
-    isLoading: boolean;
+    isListLoading: boolean;
+    isRetrieveLoading: boolean;
     error: string | null;
 
     // New state
@@ -41,7 +41,8 @@ export const createUserInteractionSlice: StateCreator<
     results: [],
     currentDocument: null,
     controller: null,
-    isLoading: false,
+    isListLoading: false,
+    isRetrieveLoading: false,
     error: null,
 
     viewSections: null, // New state
@@ -59,7 +60,7 @@ export const createUserInteractionSlice: StateCreator<
 
     list: async (params) => {
         const controller = new AbortController();
-        set({ isLoading: true, error: null, controller });
+        set({ isListLoading: true, error: null, controller });
 
         try {
             const data = await listDocuments(params, controller);
@@ -69,12 +70,12 @@ export const createUserInteractionSlice: StateCreator<
                 set({ error: err.message ?? 'List failed' });
             }
         } finally {
-            set({ isLoading: false, controller: null });
+            set({ isListLoading: false, controller: null });
         }
     },
 
     retrieve: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isRetrieveLoading: true, error: null });
 
         try {
             const doc = await retrieveDocument(id);
@@ -82,7 +83,7 @@ export const createUserInteractionSlice: StateCreator<
         } catch (err: any) {
             set({ error: err.message ?? 'Retrieve failed' });
         } finally {
-            set({ isLoading: false });
+            set({ isRetrieveLoading: false });
         }
     },
 

@@ -1,54 +1,117 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Project Title
 
-Currently, two official plugins are available:
+A modern, React-based application built with TypeScript, Vite, and TailwindCSS, designed for seamless development and scalable architecture. The project leverages popular libraries such as MUI, Zustand, and Framer Motion to deliver a highly interactive user experience.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **React 19 & TypeScript 5.8**: Type-safe code with the latest React and TypeScript versions.
+- **Vite**: Lightning-fast build system and development server.
+- **TailwindCSS**: Utility-first CSS framework for rapid UI development.
+- **MUI**: Material-UI components for a rich, consistent design system.
+- **State Management**: Zustand for lightweight state management.
+- **Testing**: Comprehensive testing with Vitest and Testing Library.
+- **Storybook**: Component-driven development with Storybook.
+- **Image Viewer**: Integrated OpenSeadragon for advanced image zooming and viewing.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Prerequisites
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+Ensure you have the following tools installed:
+
+- [Node.js](https://nodejs.org/) (LTS recommended)
+- npm (comes with Node.js)
+
+To verify the installations, you can run:
+
+```bash
+node -v
+npm -v
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Both should output the respective version numbers if installed correctly.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Installation
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+1. Clone this repository:
+
+   ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+   ```
+
+2. Install the dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+   The application will launch at `http://localhost:3000`.
+
+## Scripts
+
+Here are the commonly used npm scripts for this project:
+
+- **`npm run dev`**: Starts the Vite development server.
+- **`npm run build`**: Builds the production-ready app.
+- **`npm run preview`**: Previews the production build.
+- **`npm run test`**: Runs the test suite using Vitest.
+- **`npm run lint`**: Lints the codebase with ESLint.
+- **`npm run storybook`**: Starts the Storybook server.
+- **`npm run build-storybook`**: Builds the Storybook for production.
+
+## Libraries and Tools Used
+
+- **React**: Core library for building the UI.
+- **TypeScript**: Adds type safety to JavaScript.
+- **Vite**: Development and build tool.
+- **TailwindCSS**: CSS framework for styling.
+- **MUI**: Pre-styled components based on Material Design.
+- **Zustand**: Simplified state management.
+- **Framer Motion**: Library for animations.
+- **OpenSeadragon**: For interactive image zooming.
+- **Vitest**: Unit testing platform.
+- **Storybook**: Tool for developing and testing UI components.
+
+## Folder Structure
+
+The project is organized as follows:
+
 ```
+/src
+  /components      # Reusable React components
+  /pages           # Page-level components
+  /hooks           # Custom React hooks
+  /store           # Zustand store for state management
+  /styles          # Global and shared styles (includes TailwindCSS configurations)
+  /assets          # Static assets like images, fonts, etc.
+  /utils           # Utility functions and helpers
+/public
+  # Static files served directly, such as `index.html`.
+/tests
+  # Test files and testing-related utilities.
+```
+
+## Development Workflow
+
+1. **Start Development**: Use `npm run dev` to start the local development server. A browser window will open at
+   `http://localhost:3000`.
+2. **Code Style**: Follow the defined code style conventions enforced by ESLint and Prettier. Use `npm run lint` to
+   check for linting errors.
+3. **Testing**: Write tests with Vitest. Use `npm run test` to run the tests.
+4. **Storybook**: Test and develop components in isolation using Storybook with `npm run storybook`.
+
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+## Acknowledgments
+
+- Inspired by the flexibility of modern web tooling and frameworks.
+- Thanks to the creators and maintainers of the libraries and tools used in this project.
