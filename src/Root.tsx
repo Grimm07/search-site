@@ -11,16 +11,14 @@ const Root = () => {
 
     if (!account) {
         return (
-            <AppThemeProvider>
-                <Box height="100vh" display="flex" justifyContent="center" alignItems="center" flexDirection="column">
-                    <Typography variant="h5" gutterBottom>
-                        Please sign in to continue
-                    </Typography>
-                    <Button variant="contained" onClick={login}>
-                        Sign in with SSO
-                    </Button>
-                </Box>
-            </AppThemeProvider>
+            <Box height="100vh" display="flex" justifyContent="center" alignItems="center" flexDirection="column">
+                <Typography variant="h5" gutterBottom>
+                    Please sign in to continue
+                </Typography>
+                <Button variant="contained" onClick={login}>
+                    Sign in with SSO
+                </Button>
+            </Box>
         );
     }
 

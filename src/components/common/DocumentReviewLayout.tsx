@@ -28,7 +28,7 @@ const DocumentReviewLayout: React.FC<DocumentReviewLayoutProps> = ({ document })
 
     const metadata = document.metadata ?? {};
     const summary = document.summary;
-    const imageId = document.id;
+    const imageId = document.docId;
 
     const fieldConfigMap = layoutSchemaMap[metadata?.docType?.toLowerCase()] ?? {};
 

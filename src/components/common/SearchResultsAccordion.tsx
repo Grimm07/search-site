@@ -12,6 +12,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useInteractionStore } from '@/store/useInteractionStore';
 import DocumentReviewLayout from '@/components/common/DocumentReviewLayout';
 
+
+// todo consider migrating image loading calls to react 19 use function
 const SearchResultsAccordion: React.FC = () => {
     const { results, isListLoading } = useInteractionStore();
 

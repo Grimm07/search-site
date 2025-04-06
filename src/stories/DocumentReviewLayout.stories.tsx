@@ -3,7 +3,7 @@ import DocumentReviewLayout from '../components/common/DocumentReviewLayout';
 import { RetrievedContent } from '@/types/search';
 
 const mockDocument: RetrievedContent = {
-    id: 'doc-001',
+    docId: 'doc-001',
     docId: 'doc-001',
     contentType: 'image',
     summary: {

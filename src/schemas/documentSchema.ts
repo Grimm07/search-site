@@ -18,7 +18,7 @@ export const ReviewFieldSchema = z.object({
 export const DocumentSchema = z.object({
     id: z.string(),                   // unique ID for internal reference
     docId: z.string(),                // external ID (shown to user)
-    contentType: z.enum(['image', 'text', 'unknown']),
+    contentType: z.enum(['image' , 'pdf' , 'text' , 'json' , 'unknown']),
     summary: z
         .record(z.string(), z.string().nullable())
         .optional(), // extracted key-value pairs (e.g., from OCR/NLP)

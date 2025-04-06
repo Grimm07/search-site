@@ -1,7 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useInteractionStore } from '@/store/useInteractionStore';
-
-// todo update this file to handle your type of data
+import { DocumentSchema } from '@/schemas/documentSchema';  // Assuming the document schema is exported here
 
 const FileUploadTrigger = () => {
     const inputRef = useRef<HTMLInputElement>(null);
@@ -24,20 +23,20 @@ const FileUploadTrigger = () => {
                 reader.readAsText(file);
             });
 
-            const parsedData = JSON.parse(fileContent);
+            const parsedData = DocumentSchema.parse(fileContent);  // Parsing the uploaded data according to the schema
 
-            if (parsedData?.title) {
-                setQuery(parsedData.title);
+            if (parsedData?.docId) {
+                setQuery(parsedData.docId);
             } else {
-                console.warn("The uploaded JSON doesn't include a title field.");
+                console.warn("The uploaded JSON doesn't include a valid title.");
                 setQuery('');
             }
 
             setViewSections(parsedData);
 
-            // Trigger the search
+            // Trigger the search with the parsed title
             setSearchState('searching');
-            await list({ query: parsedData.title });
+            await list({ query: parsedData.docId });
         } catch (error) {
             console.error('Error processing the uploaded file:', error);
             useInteractionStore.setState({

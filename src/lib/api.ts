@@ -28,14 +28,14 @@ export async function retrieveDocument(id: string): Promise<RetrievedContent> {
         // Make sure this Blob is a browser-native one
 
         return {
-            id,
+            docId: id,
             docId: id,
             contentType: 'image'
         };
     } else {
 
         return {
-            id,
+            docId: id,
             docId: id,
             contentType: 'text',
         };

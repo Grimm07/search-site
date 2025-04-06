@@ -42,7 +42,7 @@ const HomePage: React.FC = () => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-            <AppBar position="static" elevation={hasResults ? 1 : 0}>
+            <AppBar position="static" elevation={1 }>
                 <Toolbar>
                     {hasResults && (
                         <IconButton

@@ -6,7 +6,7 @@ import { RetrievedContent } from '@/types/search';
 
 const mockResults: RetrievedContent[] = [
     {
-        id: 'doc-001',
+        docId: 'doc-001',
         docId: 'doc-001',
         contentType: 'image',
         summary: {
@@ -18,7 +18,7 @@ const mockResults: RetrievedContent[] = [
         },
     },
     {
-        id: 'doc-002',
+        docId: 'doc-002',
         docId: 'doc-002',
         contentType: 'image',
         summary: {
@@ -30,7 +30,7 @@ const mockResults: RetrievedContent[] = [
         },
     },
     {
-        id: 'doc-003',
+        docId: 'doc-003',
         docId: 'doc-003',
         contentType: 'image',
         summary: {

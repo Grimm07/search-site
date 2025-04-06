@@ -16,9 +16,8 @@ export interface DocumentSummary {
 export type DocumentType = 'image' | 'pdf' | 'text' | 'json' | 'unknown';
 
 export interface RetrievedContent {
-    id: string;
     docId: string;
-    contentType: DocumentType;
+    contentType?: DocumentType;
 
     // Rich metadata including extracted fields, titles, etc.
     metadata?: Record<string, any>;

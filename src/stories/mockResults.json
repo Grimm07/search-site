@@ -1,0 +1,42 @@
+[
+  {
+    "docId": "doc-001",
+    "contentType": "image",
+    "summary": {
+      "Title": "Mock Result A",
+      "Status": "Approved",
+      "Notes": "Looks good to go!"
+    },
+    "images": {
+      "primary": "https://via.placeholder.com/150"
+    }
+  },
+  {
+    "docId": "doc-002",
+    "contentType": "image",
+    "summary": {
+      "Title": "Mock Result B",
+      "Status": "Pending",
+      "Notes": "Needs review"
+    },
+    "images": {
+      "primary": "https://via.placeholder.com/150?text=Image+2"
+    }
+  },
+  {
+    "docId": "doc-003",
+    "contentType": "text",
+    "summary": {
+      "Title": "Mock Result C",
+      "Status": "Archived",
+      "Notes": "No further action."
+    },
+    "images": null
+  },
+  {
+    "docId": "doc-004",
+    "contentType": "unknown",
+    "summary": null,
+    "images": null
+  }
+]
