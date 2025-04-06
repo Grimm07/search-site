@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    // Target modern JS (ESNext syntax/features)
+    "target": "ESNext",
+    // Output modules as ESNext (pairs well with bundler resolution)
+    "module": "ESNext",
+    // Important for modern React without importing React in every JSX file
+    "jsx": "react-jsx",
+    // Tells TS 5+ to resolve imports like a modern bundler (Vite/Rollup).
+    "moduleResolution": "bundler",
+    // ~~~~~~~~~ Recommended Additions ~~~~~~~~~
+    // Allows default imports from CJS modules (like "import express from 'express'")
+    "esModuleInterop": true,
+    // Ensures file name casing is consistent (especially if you dev on Windows/Mac)
+    "forceConsistentCasingInFileNames": true,
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    // Include DOM libraries, iterative DOM, modern JS
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+
+    // Often used to skip type checks in node_modules to speed up dev
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "skipDefaultLibCheck": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      // If you have custom types, add their path here
+      "./src/types" // Adjust this path if your custom types are elsewhere
+    ],
+    // You can keep a "baseUrl" of ".", so you can define path aliases:
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    },
+    "types": ["vite/client", "vitest/globals", "msw"]
+  },
+  // Include your source folder
+  "include": ["src"],
+  // References to other tsconfigs if needed
+//  "references": [
+//    { "path": "./tsconfig.node.json" },
+//    { "path": "./tsconfig.app.json" }
+//  ]
+}

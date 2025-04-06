@@ -1,0 +1,15 @@
+{
+  "results": [
+    {
+      "id": "doc-123",
+      "title": "Invoice for July 15",
+      "docId": "123456",
+      "thumbnailUrl": "/thumb.png",
+      "fields": {
+        "Name": "Jane Doe",
+        "Status": "Unpaid",
+        "Date": "2023-07-15"
+      }
+    }
+  ]
+}

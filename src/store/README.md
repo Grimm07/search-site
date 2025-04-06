@@ -1,0 +1,1 @@
+Note the files in this directory should all be ts since they are not visual components. If you find yourself writing a .tsx file in here, it is likely that you should be creating a new component instead.
