@@ -16,7 +16,6 @@ export interface DocumentSummary {
 export type DocumentType = 'image' | 'pdf' | 'text' | 'json' | 'unknown';
 
 export interface RetrievedContent {
-    fields: Record<string, string | number | boolean | undefined>;
     id: string;
     docId: string;
     contentType: DocumentType;
