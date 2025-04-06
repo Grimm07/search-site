@@ -1,33 +1,41 @@
-// components/Footer.tsx
+// File: components/common/Footer.tsx
+
 import React from 'react';
-import { Box, Container, Typography, Link } from '@mui/material';
+import { Box, Typography, Link, Stack } from '@mui/material';
 
-interface FooterProps {
-    text?: string;
-}
-
-const Footer: React.FC<FooterProps> = ({ text }) => {
+const Footer: React.FC = () => {
     return (
         <Box
             component="footer"
             sx={{
-                py: 3,
-                px: 2,
                 mt: 'auto',
-                borderTop: '1px solid',
+                py: 4,
+                px: 3,
+                backgroundColor: (theme) =>
+                    theme.palette.mode === 'dark'
+                        ? theme.palette.grey[900]
+                        : theme.palette.grey[100],
+                borderTop: 1,
                 borderColor: 'divider',
             }}
         >
-            <Container maxWidth="lg" sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', alignItems: 'center' }}>
+            <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent="space-between" alignItems="center" spacing={2}>
                 <Typography variant="body2" color="text.secondary">
-                    {text || `© ${new Date().getFullYear()} SearchSite. All rights reserved.`}
+                    © {new Date().getFullYear()} Search Site. All rights reserved.
                 </Typography>
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Link href="/privacy" underline="hover" color="inherit">Privacy</Link>
-                    <Link href="/terms" underline="hover" color="inherit">Terms</Link>
-                    <Link href="https://github.com/your-org" underline="hover" color="inherit">GitHub</Link>
-                </Box>
-            </Container>
+
+                <Stack direction="row" spacing={3}>
+                    <Link href="/privacy" variant="body2" color="inherit" underline="hover">
+                        Privacy
+                    </Link>
+                    <Link href="/terms" variant="body2" color="inherit" underline="hover">
+                        Terms
+                    </Link>
+                    <Link href="/about" variant="body2" color="inherit" underline="hover">
+                        About
+                    </Link>
+                </Stack>
+            </Stack>
         </Box>
     );
 };
